@@ -1,0 +1,61 @@
+To make the .draggable element draggable, you can use the draggable attribute in HTML, but it's not supported in all browsers. A better approach is to use a JavaScript library like vue-draggable or interactjs.
+
+Here's an example using interactjs:
+
+First, install interactjs using npm or yarn:
+
+Edit
+Copy code
+npm install interactjs
+Then, import it in your Vue component:
+
+Edit
+Copy code
+<script setup>
+import interact from 'interactjs';
+// ...
+</script>
+Add the interact directive to the .draggable element:
+
+Edit
+Copy code
+<template>
+  <div class="h-screen w-full flex items-center justify-center relative">
+    <div class="draggable text-2xl bg-slate-300 p-9 rounded-[50%] flex flex-col space-y-2 items-center justify-between" v-interact:draggable>
+      <i class="fa-solid fa-play"></i>
+      <p>Start</p>
+    </div>
+    <!-- ... -->
+  </div>
+</template>
+In your script, enable dragging on the .draggable element:
+
+Edit
+Copy code
+<script setup>
+import interact from 'interactjs';
+
+interact('.draggable').draggable({
+  inertia: true,
+  modifiers: [
+    interact.modifiers.restrictRect({
+      restriction: 'parent',
+      endOnly: true,
+    }),
+  ],
+  autoScroll: true,
+  onmove: (event) => {
+    const target = event.target;
+    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+    target.style.transform = `translate(${x}px, ${y}px)`;
+
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  },
+});
+</script>
+This code enables dragging on the .draggable element, restricts it to its parent container, and updates the element's position on drag.
+
+Note that you may need to adjust the styles and script to fit your specific use case.
